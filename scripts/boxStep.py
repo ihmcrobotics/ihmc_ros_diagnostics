@@ -25,9 +25,12 @@ RIGHT_FOOT_FRAME_NAME = None
 
 def stepInPlace():
     msg = FootstepDataListRosMessage()
-    msg.default_transfer_time = 1.5
-    msg.default_swing_time = 1.5
+    msg.execution_timing = 0
+    msg.default_transfer_duration = 1.5
+    msg.default_swing_duration = 1.5
+    msg.final_transfer_duration = -1.0 # negative uses default value
     msg.execution_mode = 0
+    msg.execution_timing = 0
     msg.unique_id = -1
     step_width = 0.3
 
@@ -45,9 +48,11 @@ def stepInPlace():
 def boxStep():
     rospy.loginfo('start of boxStep.')
     msg = FootstepDataListRosMessage()
-    msg.default_transfer_time = 1.5
-    msg.default_swing_time = 1.5
+    msg.default_transfer_duration = 1.5
+    msg.default_swing_duration = 1.5
+    msg.final_transfer_duration = -1.0 # negative uses default value
     msg.execution_mode = 0
+    msg.execution_timing = 0
     msg.unique_id = -1
 
     rightFootFrame = Header()
@@ -88,6 +93,10 @@ def createFootstep(stepSide, position):
 
     stanceFootToWorld = tfBuffer.lookup_transform('world', stanceFootFrame, rospy.Time())
     footstep.orientation = stanceFootToWorld.transform.rotation
+
+    footstep.trajectory_type = 0
+    footstep.swing_duration = -1 # use default duration
+    footstep.transfer_duration = -1 # use default duration
 
     return footstep
 
